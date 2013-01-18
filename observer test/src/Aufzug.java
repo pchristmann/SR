@@ -32,13 +32,13 @@ public class Aufzug extends JPanel implements ActionListener {
 	 */
 	private JButton keller,eg,e1,e2,e3,e4,e5,e6;
 
-	AufzugsSimulation gui; 
-	Aufzugdaten daten;
-	Thread worker;
+
+	private Aufzugdaten daten;
+	private Thread worker;
 	public int id ;
 	public Aufzug(int id,AufzugsSimulation gui){
 		this.id = id;
-		this.gui = gui;
+		
 		
 		
 		/*
@@ -144,5 +144,10 @@ public class Aufzug extends JPanel implements ActionListener {
 		 * Gibt an ob die Tür auf oder zu ist.
 		 */
 		return daten.getTuerStatus();
+	}
+	
+	public Aufzugdaten getAufzugdaten(){
+		return daten;
+		
 	}
 }

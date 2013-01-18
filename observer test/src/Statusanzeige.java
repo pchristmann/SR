@@ -17,12 +17,16 @@ public class Statusanzeige extends JFrame implements Observer {
 	private static final long serialVersionUID = 1L;
 
 	public Statusanzeige(){
+		
 		super("Statusanzeige");
 		labels= new HashMap<>();
-
+		
+		
+		
+		
 		this.setLayout(new GridLayout(3,0));
 		this.setResizable(false);
-		this.setVisible(true);
+		//this.setVisible(true);
 	}
 
 	public void addAufzugsanzeige(Aufzug a){
@@ -32,7 +36,7 @@ public class Statusanzeige extends JFrame implements Observer {
 		 * angezeigt wird.
 		 */
 		if(!labels.containsKey(a.id)){
-			JLabel tmp = new JLabel(a.daten.toString());
+			JLabel tmp = new JLabel(a.getAufzugdaten().toString());
 
 			this.add(tmp);
 			labels.put(a.id,tmp);
@@ -51,7 +55,7 @@ public class Statusanzeige extends JFrame implements Observer {
 		 */
 
 		if(arg instanceof Aufzugdaten ){
-			int id = ((Aufzugdaten)o).id;
+			int id = ((Aufzugdaten)o).getId();
 			if(labels.containsKey(id)){
 				labels.get(id).setText(((Aufzugdaten)arg).toString());
 				pack();
@@ -59,6 +63,8 @@ public class Statusanzeige extends JFrame implements Observer {
 		}
 
 	}
+	
+	
 
 
 }

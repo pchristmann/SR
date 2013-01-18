@@ -19,10 +19,10 @@ public class Aufzugdaten extends Observable implements Runnable {
 	public static final int DEFEKT = 6;
 	public  static final int STEHT = 7;
 
-	int x,y,id;
-	int etage ;
-	int fahrtrichtung,status,tuer;
-	Vector<Integer> warteschlange;
+	private int y,id;
+	private int etage ;
+	private int fahrtrichtung,status,tuer;
+	private Vector<Integer> warteschlange;
 
 
 	public Aufzugdaten(int id,Observer e) {
@@ -31,8 +31,8 @@ public class Aufzugdaten extends Observable implements Runnable {
 		 */
 		this.id = id;
 		this.addObserver(e);
-		this.addObserver( ((AufzugsSimulation)e).aufzuegeStatus);
-		x = 0;
+		this.addObserver( ((AufzugsSimulation)e).getAufzuegeStatus());
+		
 		y = 0;
 		warteschlange = new Vector<>();
 		etage = Aufzug.ETAGE6;
@@ -48,7 +48,7 @@ public class Aufzugdaten extends Observable implements Runnable {
 		
 		this.y = y;
 		setChanged();
-		notifyObservers(new Point(this.x,y));
+		notifyObservers(new Point(0,y));
 	}
 	
 	private void pushStatusUpdate(){
@@ -223,7 +223,15 @@ public class Aufzugdaten extends Observable implements Runnable {
 	public int getTuerStatus(){
 		return tuer;
 	}
+	
+	public int getId(){
+		return id;
+	}
 
+	public int getY(){
+		return y;
+	}
+	
 
 
 }

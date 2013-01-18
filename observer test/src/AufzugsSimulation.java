@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Point;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -10,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 
 
-public class AufzugsSimulation extends JFrame implements Observer {
+public  class AufzugsSimulation extends JFrame implements Observer {
 
 	/**
 	 * 
@@ -19,13 +21,14 @@ public class AufzugsSimulation extends JFrame implements Observer {
 	
 	public static final int SCHACHTHOEHE = 700;
 	
-	Aufzug a1,a2,a3 ;
-	Statusanzeige aufzuegeStatus;
+	private Aufzug a1,a2,a3 ;
+	private final Statusanzeige aufzuegeStatus;
 
 
 
+	
 	public AufzugsSimulation(){
-
+		super("Aufzuege");
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Exception e) {
@@ -33,8 +36,8 @@ public class AufzugsSimulation extends JFrame implements Observer {
 			e.printStackTrace();
 
 		}
-		this.setTitle("Aufzuege");
-		//this.setSize(500, 700);
+		
+		
 
 		this.setLayout(new FlowLayout());
 		
@@ -63,6 +66,23 @@ public class AufzugsSimulation extends JFrame implements Observer {
 		 * angezeigt wird.
 		 */
 		aufzuegeStatus = new Statusanzeige();
+		this.addComponentListener(new ComponentAdapter() {
+			
+			
+			
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+				/*
+				 * Status anzeige an den Frame anheften 
+				 */
+				aufzuegeStatus.setLocation(getLocation().x+getWidth(),getY());
+				aufzuegeStatus.setVisible(true);
+			}
+			
+			
+		});
+		
 
 		/*
 		 * Drei Aufzüge werden erstell.
@@ -84,7 +104,8 @@ public class AufzugsSimulation extends JFrame implements Observer {
 		aufzuegeStatus.addAufzugsanzeige(a3);
 
 		/*
-		 * Erzeugt pro Etage einen Knopf und jeder Aufzug wird angemeldet.
+		 * Erzeugt pro Etage einen Knopf 
+		 * Jeder Aufzug wird angemeldet.
 		 */
 		EtagenKnoepfe knoepfe1 = new EtagenKnoepfe(a1);
 		knoepfe1.addAufzug(a2);
@@ -100,6 +121,13 @@ public class AufzugsSimulation extends JFrame implements Observer {
 		pack();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+
+
+		/*
+		 * Status anzeige an den Frame anheften 
+		 */
+		this.aufzuegeStatus.setLocation(this.getWidth(),this.getY());
+		this.aufzuegeStatus.setVisible(true);
 	}
 	@Override
 	public void update(Observable o, Object arg) {
@@ -108,18 +136,22 @@ public class AufzugsSimulation extends JFrame implements Observer {
 		 * aktualisiert.
 		 */
 		if(arg instanceof Point){
-			if (((Aufzugdaten)o).id==1){
+			if (((Aufzugdaten)o).getId()==1){
 				
 				a1.setLocation((Point) arg);
 			}
-			if (((Aufzugdaten)o).id==2){
+			if (((Aufzugdaten)o).getId()==2){
 				a2.setLocation((Point) arg);
 			}
-			if (((Aufzugdaten)o).id==3){
+			if (((Aufzugdaten)o).getId()==3){
 				a3.setLocation((Point) arg);
 			}
 		}	
 		
+	}
+	
+	public Statusanzeige getAufzuegeStatus() {
+		return aufzuegeStatus;
 	}
 
 	public static void main(String[] args){

@@ -108,27 +108,27 @@ public class EtagenKnoepfe extends JPanel implements ActionListener {
 		 */
 		
 		Aufzug aufzug = aufzuege.get(0);
-		int min_distanz= Math.abs(aufzug.daten.y - etage);
+		int min_distanz= Math.abs(aufzug.getAufzugdaten().getY() - etage);
 		Iterator<Aufzug> it= aufzuege.iterator();
 		Aufzug tmp;
 		while(it.hasNext()){
 			tmp = it.next();
-			if (min_distanz > Math.abs(tmp.daten.y - etage)){
+			if (min_distanz > Math.abs(tmp.getAufzugdaten().getY() - etage)){
 				if (tmp.getStatus() == Aufzugdaten.STEHT){
-					min_distanz = Math.abs(tmp.daten.y - etage);
+					min_distanz = Math.abs(tmp.getAufzugdaten().getY() - etage);
 					aufzug =tmp;
 				}
 				else if (tmp.getStatus() == Aufzugdaten.FAEHRT){
-					if ((etage > tmp.daten.y && tmp.getFahrtrichtung() == Aufzugdaten.RUNTER )||
-							(etage < tmp.daten.y && tmp.getFahrtrichtung() == Aufzugdaten.HOCH)){
-						min_distanz = Math.abs(tmp.daten.y - etage);
+					if ((etage > tmp.getAufzugdaten().getY() && tmp.getFahrtrichtung() == Aufzugdaten.RUNTER )||
+							(etage < tmp.getAufzugdaten().getY() && tmp.getFahrtrichtung() == Aufzugdaten.HOCH)){
+						min_distanz = Math.abs(tmp.getAufzugdaten().getY() - etage);
 						aufzug =tmp;
 						
 					}
 				}
 			}
 		}
-		aufzug.daten.push(etage);
+		aufzug.getAufzugdaten().push(etage);
 
 
 		
