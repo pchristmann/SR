@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 
 
 public class EtagenKnoepfe extends JPanel implements ActionListener {
-	
+
 	/**
 	 * 
 	 */
@@ -25,24 +25,24 @@ public class EtagenKnoepfe extends JPanel implements ActionListener {
 		this.setSize(50, AufzugsSimulation.SCHACHTHOEHE);
 		this.setBackground(Color.white);
 		this.setPreferredSize(this.getSize());
-		
-		
+
+
 		keller = new JButton("K");
-		
+
 		eg = new JButton("EG");
-		
+
 		e1 = new JButton("1");
-		
+
 		e2 = new JButton("2");
-		
+
 		e3 = new JButton("3");
-		
+
 		e4 = new JButton("4");
-		
+
 		e5 = new JButton("5");
-		
+
 		e6 = new JButton("6");
-		
+
 
 
 		keller.addActionListener(this);
@@ -63,76 +63,83 @@ public class EtagenKnoepfe extends JPanel implements ActionListener {
 		this.add(eg);
 		this.add(keller);
 	}
-	
+
 	public void addAufzug(Aufzug aufzug){
 		//Ein Aufzug wird hinzugefügt der mit den Knöpfen bedient .
 		aufzuege.add(aufzug);
-	
+
 	}
-	
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		String cmd = e.getActionCommand();
-		
+
 		/*
 		 * Der jeweilige Aufzug wird benachrichtigt.
 		 */
 		switch(cmd){
 
-		case "K": getNaechsterAufzug(Aufzug.KELLER);//AufzugsSimulation.getHeight()-getHeight()-50*1);
+		case "K": getNaechsterAufzug(Aufzug.KELLER);
 		break;
-		case "EG":  getNaechsterAufzug(Aufzug.EG);//AufzugsSimulation.getHeight()-50-getHeight()*2);
+		case "EG":  getNaechsterAufzug(Aufzug.EG);
 		break;
-		case "1":  getNaechsterAufzug(Aufzug.ETAGE1);//AufzugsSimulation.getHeight()-50-getHeight()*3);
+		case "1":  getNaechsterAufzug(Aufzug.ETAGE1);
 		break;
-		case "2":  getNaechsterAufzug(Aufzug.ETAGE2);//AufzugsSimulation.getHeight()-50-getHeight()*4);
+		case "2":  getNaechsterAufzug(Aufzug.ETAGE2);
 		break;
-		case "3": getNaechsterAufzug(Aufzug.ETAGE3);//AufzugsSimulation.getHeight()-50-getHeight()*5);
+		case "3": getNaechsterAufzug(Aufzug.ETAGE3);
 		break;
-		case "4": getNaechsterAufzug(Aufzug.ETAGE4);//AufzugsSimulation.getHeight()-50-getHeight()*6);
+		case "4": getNaechsterAufzug(Aufzug.ETAGE4);
 		break;
-		case "5":  getNaechsterAufzug(Aufzug.ETAGE5);//AufzugsSimulation.getHeight()-50-getHeight()*7);
+		case "5":  getNaechsterAufzug(Aufzug.ETAGE5);
 		break;
-		case "6":  getNaechsterAufzug(Aufzug.ETAGE6);//AufzugsSimulation.getHeight()-50-getHeight()*8);
+		case "6":  getNaechsterAufzug(Aufzug.ETAGE6);
 		break;
 
 		}
 	}
-	
-	private void getNaechsterAufzug(int etage){
-		
+
+	private void  getNaechsterAufzug(int etage){
+
 		/*
 		 * Der nächste Aufzug wird ermittelt.
 		 */
-		
+
+
 		Aufzug aufzug = aufzuege.get(0);
-		int min_distanz= Math.abs(aufzug.daten.y - etage);
+		int min_distanz= AufzugsSimulation.SCHACHTHOEHE;
 		Iterator<Aufzug> it= aufzuege.iterator();
-		Aufzug tmp;
+		Aufzug tmp ;
 		while(it.hasNext()){
 			tmp = it.next();
-			if (min_distanz > Math.abs(tmp.daten.y - etage)){
-				if (tmp.getStatus() == Aufzugdaten.STEHT){
-					min_distanz = Math.abs(tmp.daten.y - etage);
-					aufzug =tmp;
+
+			if(tmp.getStatus() != Aufzugdaten.DEFEKT){
+
+
+				if(tmp.getStatus() == Aufzugdaten.STEHT){
+					if(min_distanz > Math.abs(tmp.getAufzugdaten().getY() - etage)  ){
+						min_distanz= Math.abs(tmp.getAufzugdaten().getY() - etage);
+						aufzug = tmp;
+					}
 				}
+				/*
+				 * Liegt die Etage auf dem Weg.
+				 */
 				else if (tmp.getStatus() == Aufzugdaten.FAEHRT){
-					if ((etage > tmp.daten.y && tmp.getFahrtrichtung() == Aufzugdaten.RUNTER )||
-							(etage < tmp.daten.y && tmp.getFahrtrichtung() == Aufzugdaten.HOCH)){
-						min_distanz = Math.abs(tmp.daten.y - etage);
+					if ((etage > tmp.getAufzugdaten().getY() && tmp.getFahrtrichtung() == Aufzugdaten.RUNTER )||
+							(etage < tmp.getAufzugdaten().getY() && tmp.getFahrtrichtung() == Aufzugdaten.HOCH)){
+						min_distanz = Math.abs(tmp.getAufzugdaten().getY() - etage);
 						aufzug =tmp;
-						
+
 					}
 				}
 			}
 		}
-		aufzug.daten.push(etage);
+		aufzug.getAufzugdaten().push(etage);
 
-
-		
 	}
-	
+
 
 }

@@ -5,7 +5,7 @@ import java.util.Vector;
 
 
 public class Aufzugdaten extends Observable implements Runnable {
-	
+
 	//Fahrtrichtung
 	public static final int HOCH = 1;
 	public static final int RUNTER = 2;
@@ -19,10 +19,10 @@ public class Aufzugdaten extends Observable implements Runnable {
 	public static final int DEFEKT = 6;
 	public  static final int STEHT = 7;
 
-	int x,y,id;
-	int etage ;
-	int fahrtrichtung,status,tuer;
-	Vector<Integer> warteschlange;
+	private int y,id;
+	private int etage ;
+	private int fahrtrichtung,status,tuer;
+	private Vector<Integer> warteschlange;
 
 
 	public Aufzugdaten(int id,Observer e) {
@@ -31,8 +31,8 @@ public class Aufzugdaten extends Observable implements Runnable {
 		 */
 		this.id = id;
 		this.addObserver(e);
-		this.addObserver( ((AufzugsSimulation)e).aufzuegeStatus);
-		x = 0;
+		this.addObserver( ((AufzugsSimulation)e).getAufzuegeStatus());
+
 		y = 0;
 		warteschlange = new Vector<>();
 		etage = Aufzug.ETAGE6;
@@ -41,16 +41,16 @@ public class Aufzugdaten extends Observable implements Runnable {
 	}
 
 	public void call( int y){
-		
+
 		/*
 		 * Der AufzugsSimulation wird die aktuelle Position mitgeteilt.
 		 */
-		
+
 		this.y = y;
 		setChanged();
-		notifyObservers(new Point(this.x,y));
+		notifyObservers(new Point(0,y));
 	}
-	
+
 	private void pushStatusUpdate(){
 		/*
 		 * Die Statusanzeige wird aktualisiert.
@@ -59,36 +59,36 @@ public class Aufzugdaten extends Observable implements Runnable {
 		notifyObservers(this);
 	}
 	public String toString(){
-		
-		
-		
+
+
+
 		String status = "Aufzug "+id+": ";
-		
+
 		switch(this.getStatus()){
-			case FAEHRT: 
-				status += "Status: Fahert ";
-				break;
-			case STEHT: 
-				status += "Status: Steht ";
-				break;
-			case DEFEKT: 
-				status += "Status: Defekt ";
-				break;
+		case FAEHRT: 
+			status += "Status: Fahert ";
+			break;
+		case STEHT: 
+			status += "Status: Steht ";
+			break;
+		case DEFEKT: 
+			status += "Status: Defekt ";
+			break;
 		}
-		
+
 		if(this.getFahrtrichtung() == HOCH){
 			status += "Fahrtrichtung: Hoch ";
 		}else {
 			status += "Fahrtrichtung: Runter ";
 		}
-		
+
 		if(this.getTuerStatus()== TUER_GESCHLOSSEN){
 			status += "Tuer: Geschlossen";
 		}else status += "Tuer: Offen";
-		
+
 		switch(etage){
 		case Aufzug.ETAGE1: status += " Etage: 1";
-			break;
+		break;
 		case Aufzug.ETAGE2: status += " Etage: 2";
 		break;
 		case Aufzug.ETAGE3: status += " Etage: 3";
@@ -103,9 +103,9 @@ public class Aufzugdaten extends Observable implements Runnable {
 		break;
 		case Aufzug.KELLER: status += " Etage: Keller";
 		break;
-		
+
 		}
-		
+
 		return status;
 	}
 
@@ -120,7 +120,7 @@ public class Aufzugdaten extends Observable implements Runnable {
 			int i = this.y;
 			System.out.println("move to: "+ etage +" von Pos: "+ i);
 			if (etage <i){
-				while(etage<= i){
+				while(etage<= i && status != DEFEKT){
 					fahrtrichtung = HOCH;
 					pushStatusUpdate();
 					call(i);
@@ -136,7 +136,7 @@ public class Aufzugdaten extends Observable implements Runnable {
 					}
 				}
 			}else{
-				while(etage>=i){
+				while(etage>=i && status != DEFEKT){
 					fahrtrichtung = RUNTER;
 					pushStatusUpdate();
 					call(i);
@@ -155,9 +155,17 @@ public class Aufzugdaten extends Observable implements Runnable {
 				}
 
 			}
-			this.etage = etage;
-			tuer = TUER_OFFEN;
-			status = STEHT;
+
+			if(status == FAEHRT){
+				tuer = TUER_OFFEN;
+				status = STEHT;
+				this.etage = etage;
+			}else{
+				warteschlange.add(etage);
+				tuer = TUER_GESCHLOSSEN;
+				status = DEFEKT;
+			}
+
 			pushStatusUpdate();
 
 			Thread.sleep(1000);
@@ -171,12 +179,14 @@ public class Aufzugdaten extends Observable implements Runnable {
 		/*
 		 * Eine Fahrtziel wird zur Warteschlange hinzugefügt.
 		 */
-		warteschlange.add(etage);
-		notify();
+		if ( status != DEFEKT){
+			warteschlange.add(etage);
+			notify();
+		}
 	}
 
 	public synchronized int pop(){
-		
+
 		/*
 		 * Der Thread wartet bis ein neues Fahrtziehl hinzugefügt wird.
 		 */
@@ -199,12 +209,14 @@ public class Aufzugdaten extends Observable implements Runnable {
 		 *  Der Thread holt die Befehle aus der Warteschlange und 
 		 *  arbeitet sie ab.
 		 */
-		
-		while(true){
-			
-			int x = pop();
-			moveToEtage(x);
 
+		while(true){
+			if(status != DEFEKT){
+				
+				int x = pop();
+				moveToEtage(x);
+			}
+			System.out.println(status);
 
 		}
 
@@ -222,6 +234,21 @@ public class Aufzugdaten extends Observable implements Runnable {
 
 	public int getTuerStatus(){
 		return tuer;
+	}
+
+	public int getId(){
+		return id;
+	}
+
+	public int getY(){
+		return y;
+	}
+
+	public void setStatus(int status) {
+		// TODO Auto-generated method stub
+		this.status = status;
+		System.out.println(this.status);
+		this.pushStatusUpdate();
 	}
 
 
