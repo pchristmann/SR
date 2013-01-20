@@ -216,7 +216,7 @@ public class Aufzugdaten extends Observable implements Runnable {
 				int x = pop();
 				moveToEtage(x);
 			}
-			System.out.println(status);
+			//System.out.println(status);
 
 		}
 
