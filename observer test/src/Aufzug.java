@@ -90,6 +90,7 @@ public class Aufzug extends JPanel implements ActionListener {
 
 
 		worker.start();
+		
 
 
 	}
@@ -150,4 +151,9 @@ public class Aufzug extends JPanel implements ActionListener {
 		return daten;
 		
 	}
+	public void setStatus(int status) {
+		// TODO Auto-generated method stub
+		daten.setStatus(status);
+	}
+
 }

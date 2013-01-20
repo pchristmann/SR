@@ -22,7 +22,7 @@ public class Statusanzeige extends JFrame implements Observer {
 		labels= new HashMap<>();
 		
 		
-		
+		 
 		
 		this.setLayout(new GridLayout(3,0));
 		this.setResizable(false);
