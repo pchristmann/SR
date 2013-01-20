@@ -35,11 +35,11 @@ public class Statusanzeige extends JFrame implements Observer {
 		 * Eine neus Label wird erzeugt in dem der Status eines Aufzuges 
 		 * angezeigt wird.
 		 */
-		if(!labels.containsKey(a.id)){
+		if(!labels.containsKey(a.getId())){
 			JLabel tmp = new JLabel(a.getAufzugdaten().toString());
 
 			this.add(tmp);
-			labels.put(a.id,tmp);
+			labels.put(a.getId(),tmp);
 
 			pack();
 		}

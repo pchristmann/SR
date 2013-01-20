@@ -27,7 +27,7 @@ public  class AufzugsSimulation extends JFrame implements Observer {
 	
 	private Aufzug a1,a2,a3 ;
 	private final Statusanzeige aufzuegeStatus;
-
+	private EtagenKnoepfe knoepfe1;
 
 
 	
@@ -183,7 +183,7 @@ public  class AufzugsSimulation extends JFrame implements Observer {
 		 * Erzeugt pro Etage einen Knopf 
 		 * Jeder Aufzug wird angemeldet.
 		 */
-		EtagenKnoepfe knoepfe1 = new EtagenKnoepfe(a1);
+		knoepfe1 = new EtagenKnoepfe(a1);
 		knoepfe1.addAufzug(a2);
 		knoepfe1.addAufzug(a3);
 		this.add(knoepfe1);

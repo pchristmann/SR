@@ -34,10 +34,10 @@ public class Aufzug extends JPanel implements ActionListener {
 
 
 	private Aufzugdaten daten;
-	private Thread worker;
-	public int id ;
+	private Thread thread;
+	
 	public Aufzug(int id,AufzugsSimulation gui){
-		this.id = id;
+		
 		
 		
 		
@@ -46,7 +46,7 @@ public class Aufzug extends JPanel implements ActionListener {
 		 */
 		
 		this.daten = new Aufzugdaten(id,gui) ;
-		worker = new Thread(daten);
+		thread = new Thread(daten);
 	
 		
 		this.setSize(100, 100);
@@ -89,7 +89,7 @@ public class Aufzug extends JPanel implements ActionListener {
 		this.add(e6);
 
 
-		worker.start();
+		thread.start();
 		
 
 
@@ -154,6 +154,10 @@ public class Aufzug extends JPanel implements ActionListener {
 	public void setStatus(int status) {
 		// TODO Auto-generated method stub
 		daten.setStatus(status);
+	}
+	public int getId() {
+		// TODO Auto-generated method stub
+		return daten.getId();
 	}
 
 }
